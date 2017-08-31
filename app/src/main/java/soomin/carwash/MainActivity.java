@@ -12,8 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import soomin.carwash.item.Weather_Interface;
 import soomin.carwash.item.Repo;
+import soomin.carwash.item.Main;
+//import soomin.carwash.item.Item;
 import soomin.carwash.item.Weather;
 import soomin.carwash.custom.OpenWeatherAPITask;
 
@@ -28,12 +32,58 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static soomin.carwash.R.id.tem;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private String url = "http://api.openweathermap.org";
+    private String url = "http://api.openweathermap.org/";
     private String key = "7d0203cfc7d7fb58e65e1b312ca410ef";
 
+    @Bind(R.id.city)
+    EditText mCity;
+    @Bind(R.id.tem)
+    TextView tem;
+    @Bind(R.id.getWeatherBtn)
+    Button getBtn;
+    @Bind(R.id.tvCity)
+    TextView tvCity;
+
+    @OnClick(R.id.getWeatherBtn)
+    public void setWeather(View view) {
+
+        String city = mCity.getText().toString();
+        String units = "metric";
+        //double cnt = 7;
+        //Toast.makeText(MainActivity.this, city,Toast.LENGTH_LONG).show();
+
+        Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
+        Weather_Interface interFace = client.create(Weather_Interface.class);
+        Call<Repo> call = interFace.get_weather(key,city,units,"7");
+        //Toast.makeText(MainActivity.this, key+city+units,Toast.LENGTH_LONG).show();
+        call.enqueue(new Callback<Repo>() {
+            @Override
+            public void onResponse(Call<Repo> call, Response<Repo> response) {
+                if(response.isSuccessful()){
+                    Repo repo = response.body();
+                    //Toast.makeText(MainActivity.this,""+repo.getList().get(0).getHumidity(),Toast.LENGTH_LONG).show();
+                    String text = "";
+                    for(int i=0;i<repo.getList().size();i++) {
+                        text += i+"번째날"+repo.getList().get(i).getTemp().getDay() + "\n";
+                    }
+                    tem.setText(text);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Repo> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    /*
     @Bind(R.id.lat)
     EditText mlat;
     @Bind(R.id.lon)
@@ -81,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
     //로그 확인을 위해
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();

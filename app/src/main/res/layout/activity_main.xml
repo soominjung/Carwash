@@ -11,16 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvLongtitude"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="37dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="39dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLongtitude"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginTop="45dp"
+        app:layout_constraintTop_toBottomOf="@+id/city" />
 
     <Button
         android:id="@+id/getWeatherBtn"
@@ -30,29 +29,27 @@
         android:layout_alignParentEnd="true"
         android:onClick="getWeather"
         android:text="getWeather"
-        tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
-        android:layout_marginEnd="41dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="37dp"
-        app:layout_constraintTop_toBottomOf="@+id/lon"
-        android:layout_marginRight="41dp" />
+        android:layout_marginEnd="16dp"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="@+id/city"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/tvLatitude"
+        android:id="@+id/tvCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="latitude"
+        android:text="city"
         android:textAppearance="?android:attr/textAppearanceMedium"
         tools:layout_constraintTop_creator="1"
         android:layout_marginStart="16dp"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginTop="70dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_marginTop="61dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+<!--
     <TextView
         android:id="@+id/tvLongtitude"
         android:layout_width="wrap_content"
@@ -66,22 +63,25 @@
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintBottom_toBottomOf="@+id/lon"
         android:layout_marginBottom="1dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent" />-->
 
     <EditText
-        android:id="@+id/lat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvLatitude"
-        android:layout_toEndOf="@+id/tvLatitude"
+        android:id="@+id/city"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/tvCity"
+        android:layout_toEndOf="@+id/tvCity"
         android:width="100dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
-        android:layout_marginEnd="89dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="50dp"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/getWeatherBtn"
+        android:layout_marginStart="8dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/tem" />
+<!--
     <EditText
         android:id="@+id/lon"
         android:layout_width="wrap_content"
@@ -97,6 +97,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/lat" />
+        -->
 
 
 
