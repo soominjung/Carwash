@@ -2,6 +2,8 @@ package soomin.carwash;
 
 import java.util.concurrent.ExecutionException;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -69,7 +71,10 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(MainActivity.this,""+repo.getList().get(0).getHumidity(),Toast.LENGTH_LONG).show();
                     String text = "";
                     for(int i=0;i<repo.getList().size();i++) {
-                        text += i+"번째날"+repo.getList().get(i).getTemp().getDay() + "\n";
+                        if(i==0)
+                            text+="오늘     "+repo.getList().get(i).getTemp().getDay() + "도\n";
+                        else
+                            text += i+"일 후 "+repo.getList().get(i).getTemp().getDay() + "도\n";
                     }
                     tem.setText(text);
                 }
@@ -146,6 +151,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
+        fragmentTransaction.commit();
     }
 }
 
