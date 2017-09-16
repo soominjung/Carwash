@@ -1,8 +1,14 @@
 package soomin.carwash;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +31,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import soomin.carwash.item.Repo;
 import soomin.carwash.item.Weather_Interface;
 
+import static soomin.carwash.R.id.lon;
+
 //import soomin.carwash.item.Item;
 
 
@@ -33,31 +41,41 @@ public class MainActivity extends AppCompatActivity {
     private String url = "http://api.openweathermap.org/";
     private String key = "7d0203cfc7d7fb58e65e1b312ca410ef";
 
-    @Bind(R.id.city)
-    EditText mCity;
+    Double latitude;
+    Double longitude;
+
+    @Bind(R.id.lat)
+    EditText mlat;
+    @Bind(lon)
+    EditText mlon;
     @Bind(R.id.tem)
     TextView tem;
     @Bind(R.id.getWeatherBtn)
     Button getBtn;
-    @Bind(R.id.tvCity)
-    TextView tvCity;
-
-    private String s;
+    @Bind(R.id.tvLatitude)
+    TextView tvLatitude;
+    @Bind(R.id.tvLongtitude)
+    TextView tvLongtitude;
 
 
     @OnClick(R.id.getWeatherBtn)
     public void setWeather(View view) {
-        String city = mCity.getText().toString();
+
+        startLocationService();
+
+        //String lat = mlat.getText().toString();
+        //String lon = mlon.getText().toString();
         String units = "metric";
+
         //double cnt = 7;
         //Toast.makeText(MainActivity.this, city,Toast.LENGTH_LONG).show();
 
-        s=CachePot.getInstance().pop(String.class);
-        tem.setText(s);
+        //s=CachePot.getInstance().pop(String.class);
+        //tem.setText(s);
 
         Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
         Weather_Interface interFace = client.create(Weather_Interface.class);
-        Call<Repo> call = interFace.get_weather(key,city,units,"7");
+        Call<Repo> call = interFace.get_weather(key,latitude,longitude,units,"14");
         //Toast.makeText(MainActivity.this, key+city+units,Toast.LENGTH_LONG).show();
         call.enqueue(new Callback<Repo>() {
             @Override
@@ -68,11 +86,17 @@ public class MainActivity extends AppCompatActivity {
                     String text = "";
                     for(int i=0;i<repo.getList().size();i++) {
                         if(i==0)
-                            text+="오늘     "+repo.getList().get(i).getTemp().getDay() + "도\n";
+                            text+="오늘     "+repo.getList().get(i).getList2().get(0).getId()+ "\n";
                         else
-                            text += i+"일 후 "+repo.getList().get(i).getTemp().getDay() + "도\n";
+                            text += i+"일 후 "+repo.getList().get(i).getList2().get(0).getId() + "\n";
                     }
-                    //tem.setText(text);
+                    tem.setText(text);
+                    CachePot.getInstance().push(repo);
+
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
+                    fragmentTransaction.commit();
                 }
             }
 
@@ -81,6 +105,67 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
             }
         });
+
+    }
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    public void startLocationService(){
+        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        GPSListener gpsListener = new GPSListener();
+        long minTime = 10000;
+        float minDistance = 0;
+
+        try {
+            // GPS를 이용한 위치 요청
+            manager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    minTime,
+                    minDistance,
+                    gpsListener);
+
+            // 네트워크를 이용한 위치 요청
+            manager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    minTime,
+                    minDistance,
+                    gpsListener);
+            // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
+             Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastLocation != null) {
+                latitude = lastLocation.getLatitude();
+                longitude = lastLocation.getLongitude();
+
+                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : " + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
+            }
+        } catch(SecurityException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 리스너 클래스 정의
+     */
+    public class GPSListener implements LocationListener {
+        /**
+         * 위치 정보가 확인될 때 자동 호출되는 메소드
+         */
+        public void onLocationChanged(Location location) {
+            Double latitude = location.getLatitude();
+            Double longitude = location.getLongitude();
+
+            String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
+
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
 
     }
 
@@ -148,10 +233,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+/*
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 }
 

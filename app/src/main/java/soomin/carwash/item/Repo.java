@@ -1,10 +1,6 @@
 package soomin.carwash.item;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 //import soomin.carwash.item.Item;
 
 /**
@@ -33,6 +29,17 @@ public class Repo {
 
     public class Item {
 
+        List<Item2> weather;
+        public List<Item2> getList2() {return weather;}
+
+        public class Item2{
+            int id;
+
+            public int getId(){
+                return id;
+            }
+        }
+        /*
         temp temp;
 
         public class temp {
@@ -46,6 +53,7 @@ public class Repo {
         public temp getTemp() {
             return temp;
         }
+        */
     }
 
 
