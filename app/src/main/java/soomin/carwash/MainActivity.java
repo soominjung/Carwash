@@ -1,27 +1,16 @@
 package soomin.carwash;
 
-import java.util.concurrent.ExecutionException;
-
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import soomin.carwash.item.Weather_Interface;
-import soomin.carwash.item.Repo;
-import soomin.carwash.item.Main;
-//import soomin.carwash.item.Item;
-import soomin.carwash.item.Weather;
-import soomin.carwash.custom.OpenWeatherAPITask;
+import com.github.kimkevin.cachepot.CachePot;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,8 +22,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import soomin.carwash.item.Repo;
+import soomin.carwash.item.Weather_Interface;
 
-import static soomin.carwash.R.id.tem;
+//import soomin.carwash.item.Item;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,13 +42,18 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.tvCity)
     TextView tvCity;
 
+    private String s;
+
+
     @OnClick(R.id.getWeatherBtn)
     public void setWeather(View view) {
-
         String city = mCity.getText().toString();
         String units = "metric";
         //double cnt = 7;
         //Toast.makeText(MainActivity.this, city,Toast.LENGTH_LONG).show();
+
+        s=CachePot.getInstance().pop(String.class);
+        tem.setText(s);
 
         Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
         Weather_Interface interFace = client.create(Weather_Interface.class);
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         else
                             text += i+"일 후 "+repo.getList().get(i).getTemp().getDay() + "도\n";
                     }
-                    tem.setText(text);
+                    //tem.setText(text);
                 }
             }
 

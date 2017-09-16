@@ -1,12 +1,13 @@
 package soomin.carwash;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.github.kimkevin.cachepot.CachePot;
 
 
 /**
@@ -52,23 +53,34 @@ public class WeatherFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+*/
 
+    ImageView iv;
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+
     }
 */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View v = inflater.inflate(R.layout.fragment_weather, container, false);
+        iv = (ImageView) v.findViewById(R.id.imageView);
+        iv.setImageResource(R.drawable.w50d);
+
+        String s = "아무거나";
+        CachePot.getInstance().push(s);
+
+        return v;
     }
-/*
+
+
+ /*
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
