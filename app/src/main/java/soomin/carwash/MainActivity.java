@@ -4,21 +4,25 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.kimkevin.cachepot.CachePot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,12 +34,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import soomin.carwash.adapter.SpinnerAdapter;
+import soomin.carwash.item.CityPositionList;
+import soomin.carwash.item.CustomTextView;
 import soomin.carwash.item.Repo;
 import soomin.carwash.item.Weather_Interface;
-
-import static soomin.carwash.R.id.lon;
-
-//import soomin.carwash.item.Item;
+import soomin.carwash.item.rainReport;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,59 +50,82 @@ public class MainActivity extends AppCompatActivity {
     Double latitude;
     Double longitude;
 
-    @Bind(R.id.lat)
-    EditText mlat;
-    @Bind(lon)
-    EditText mlon;
+    int pos;
+    private CityPositionList cpList = new CityPositionList();
+    List<CityPositionList.Position> cityPositionList = cpList.getCpList();
+
+    FragmentManager fm = getFragmentManager();
+
     @Bind(R.id.tem)
-    TextView tem;
-    @Bind(R.id.getWeatherBtn)
-    Button getBtn;
-    @Bind(R.id.tvLatitude)
-    TextView tvLatitude;
-    @Bind(R.id.tvLongtitude)
-    TextView tvLongtitude;
+    CustomTextView tem;
+    @Bind(R.id.ivWeather)
+    ImageView ivWeather;
+    @Bind(R.id.mLayout)
+    ConstraintLayout mLayout;
+    @Bind(R.id.tvDescription)
+    TextView tvDescription;
 
 
     @OnClick(R.id.getWeatherBtn)
-    public void setWeather(View view) {
+    public void setWeather() {
 
-        startLocationService();
-
-        //String lat = mlat.getText().toString();
-        //String lon = mlon.getText().toString();
         String units = "metric";
-
-        //double cnt = 7;
-        //Toast.makeText(MainActivity.this, city,Toast.LENGTH_LONG).show();
-
-        //s=CachePot.getInstance().pop(String.class);
-        //tem.setText(s);
 
         Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
         Weather_Interface interFace = client.create(Weather_Interface.class);
         Call<Repo> call = interFace.get_weather(key,latitude,longitude,units,"14");
-        //Toast.makeText(MainActivity.this, key+city+units,Toast.LENGTH_LONG).show();
         call.enqueue(new Callback<Repo>() {
             @Override
             public void onResponse(Call<Repo> call, Response<Repo> response) {
                 if(response.isSuccessful()){
                     Repo repo = response.body();
-                    //Toast.makeText(MainActivity.this,""+repo.getList().get(0).getHumidity(),Toast.LENGTH_LONG).show();
-                    String text = "";
-                    for(int i=0;i<repo.getList().size();i++) {
+                    //String text = "";
+
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragmentBorC, new WeatherFragment());
+                    fragmentTransaction.commit();
+
+                    List<rainReport> rRep= new ArrayList<rainReport>();
+
+                    int afterRain=0;
+                    int noRainCnt=0;
+                    int rrCnt=0;
+                    int max=0;
+                    int maxInx=0;
+                    rRep.add(new rainReport(0,0));
+
+                    for(int i=0;i<repo.getList().size();i++){
+                        int id = repo.getList().get(i).getList2().get(0).getId();
+                        if(id/100!=2&&id/100!=3&&id/100!=5&&id/100!=6){
+                            noRainCnt++;
+                            if(i==repo.getList().size()-1){
+                                rRep.get(rrCnt).setNoRain(noRainCnt);
+                                rRep.add(new rainReport(i+1,0));
+                                rrCnt++;
+                            }
+                        }else {
+                            rRep.get(rrCnt).setNoRain(noRainCnt);
+                            rRep.add(new rainReport(i+1,0));
+                            rrCnt++;
+                            noRainCnt = 0;
+                        }
+                    }
+                    for (int i = 0; i < rrCnt; i++) {
+                        if (max < rRep.get(i).getNoRain()) {
+                            max = rRep.get(i).getNoRain();
+                            maxInx = i;
+                        }
+                    }
+                    //Toast.makeText(MainActivity.this, "after ndays:"+afterRain+"no rain for:"+longestNoRain,Toast.LENGTH_LONG).show();
+                    showMessage(rRep.get(maxInx).getNoRain(),rRep.get(maxInx).getAfterRain());
+                    /*for(int i=0;i<repo.getList().size();i++) {
                         if(i==0)
                             text+="오늘     "+repo.getList().get(i).getList2().get(0).getId()+ "\n";
                         else
                             text += i+"일 후 "+repo.getList().get(i).getList2().get(0).getId() + "\n";
-                    }
-                    //tem.setText(text);
+                    }*/
                     CachePot.getInstance().push(repo);
 
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                    fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
-                    fragmentTransaction.commit();
                 }
             }
 
@@ -109,6 +136,57 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public void showMessage(int longestNoRain,int afterRain) {
+        if(longestNoRain>2){
+            if(afterRain==0)
+                tvDescription.setText("오늘부터 "+longestNoRain+"일 간 비/눈소식 없음");
+            else
+                tvDescription.setText(afterRain+"일 후부터 "+longestNoRain+"일 간 비/눈소식 없음");
+        }
+        else
+            tvDescription.setText("2주간 잦은 비소식");
+        //Toast.makeText(MainActivity.this, afterRain+"일 후부터 "+longestNoRain+"일 간 비소식 없음",Toast.LENGTH_LONG).show();
+        if (longestNoRain < 3) {
+            mLayout.setBackgroundColor(Color.rgb(101,114,122));
+            tem.setText("당분간\n세차하면 안돼요 :(");
+            ivWeather.setImageResource(R.drawable.rain);
+        } else if (longestNoRain<4) {
+            if(afterRain==0) {
+                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                tem.setText("오늘 세차해도\n괜찮아요.");
+                ivWeather.setImageResource(R.drawable.cloud);
+            }
+            else {
+                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                tem.setText(afterRain + "일 후에 세차해도\n나쁘지 않아요.");
+                ivWeather.setImageResource(R.drawable.cloud);
+            }
+        } else if (longestNoRain<6){
+            if(afterRain==0) {
+                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                tem.setText("오늘 세차하면\n좋아요 :)");
+                ivWeather.setImageResource(R.drawable.cloud);
+            }
+            else {
+                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                tem.setText(afterRain + "일 후에 세차하면\n좋아요 :)");
+                ivWeather.setImageResource(R.drawable.cloud);
+            }
+        } else {
+            if(afterRain==0) {
+                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                tem.setText("오늘 꼭!\n세차하세요:D");
+                ivWeather.setImageResource(R.drawable.sun);
+            }
+            else {
+                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                tem.setText(afterRain + "일 후는\n세차하기 좋은날!");
+                ivWeather.setImageResource(R.drawable.sun);
+            }
+        }
+    }
+
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void startLocationService(){
         LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -137,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 latitude = lastLocation.getLatitude();
                 longitude = lastLocation.getLongitude();
 
-                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : " + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : " + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
             }
         } catch(SecurityException ex) {
             ex.printStackTrace();
@@ -152,12 +230,13 @@ public class MainActivity extends AppCompatActivity {
          * 위치 정보가 확인될 때 자동 호출되는 메소드
          */
         public void onLocationChanged(Location location) {
-            Double latitude = location.getLatitude();
-            Double longitude = location.getLongitude();
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            if(pos==0)
+                setWeather();
+            //String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
 
-            String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
-
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
         public void onProviderDisabled(String provider) {
@@ -171,55 +250,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    @Bind(R.id.lat)
-    EditText mlat;
-    @Bind(R.id.lon)
-    EditText mlon;
-    @Bind(R.id.getWeatherBtn)
-    Button getBtn;
-    @Bind(R.id.tem)
-    TextView tem;
-    @Bind(R.id.tvLatitude)
-    TextView tvLatitude;
-    @Bind(R.id.tvLongtitude)
-    TextView tvLongtitude;
-
-    @OnClick(R.id.getWeatherBtn)
-    public void setWeather(View view){
-
-        String lat = mlat.getText().toString();
-        String lon = mlon.getText().toString();
-
-        //서버의 json 응답을 간단하게 변환하도록 해주는 작업
-        Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
-        //인터페이스
-        Weather_Interface interFace = client.create(Weather_Interface.class);
-
-        //Call
-        Call<Repo> call = interFace.get_weather(key,Double.valueOf(lat), Double.valueOf(lon));
-        call.enqueue(new Callback<Repo>() {
-            @Override
-            public void onResponse(Call<Repo> call, Response<Repo> response) {
-                if(response.isSuccessful()){
-                    Repo repo = response.body();
-                    tem.setText("Temp : " +repo.getMain().getTemp()
-                            +"\nTempMin : " +repo.getMain().getTemp_min()
-                            +"\nTempMax : " +repo.getMain().getTemp_max()
-                            +"\nHumidity : " +repo.getMain().getHumidity()
-                            +"\nPressure : " +repo.getMain().getPressure()
-                            +"\nWind_Speed : " +repo.getWind().getWind_speed()
-                            +"\nWind_deg : " +repo.getWind().getWind_deg());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Repo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-*/
     //로그 확인을 위해
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -233,25 +263,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
 
-        Spinner s = (Spinner)findViewById(R.id.spinner);
-        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
+        fragmentTransaction.commit();
+
+        startLocationService();
+        setWeather();
+
+        Spinner s1 = (Spinner) findViewById(R.id.spinner);
+        String[] test= {"현위치","서울","부산","대구","인천","광주","대전","울산","경기남부","경기북부","강원도","충청북도","충청남도","전라북도","전라남도","경상북도","경상남도","제주"};
+                SpinnerAdapter s1Adapter = new SpinnerAdapter(this,android.R.layout.simple_spinner_item, test);
+        s1.setAdapter(s1Adapter);
+        s1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                Toast.makeText(getApplicationContext(), ""+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();//tv.setText("position : " + position + parent.getItemAtPosition(position));
+                pos = position;
+                //Toast.makeText(getApplicationContext(), ""+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
+
+                if(pos==0)
+                    startLocationService();
+                else{
+                    latitude=cityPositionList.get(pos).getLat();
+                    longitude=cityPositionList.get(pos).getLon();
+                }
+                setWeather();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-
-
-/*
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
-        fragmentTransaction.commit();*/
     }
 }
 
@@ -289,39 +332,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-*/
-/**
-    // MapView 참고 http://seuny.tistory.com/14
-    public void getWeather(View view)
-    {
-
-        EditText tvLon = (EditText) findViewById(R.id.lon);
-        String strLon = tvLon.getText().toString();
-        int lon = Integer.parseInt(strLon);
-
-        EditText tvLat = (EditText) findViewById(R.id.lat);
-        String strLat = tvLat.getText().toString();
-        int lat = Integer.parseInt(strLat);
-
-
-        OpenWeatherAPITask t= new OpenWeatherAPITask();
-        try {
-            Weather w = t.execute(lon,lat).get();
-
-            System.out.println("Temp :"+w.getTemperature());
-
-            TextView tem = (TextView)findViewById(R.id.tem);
-            String temperature = String.valueOf(w.getTemperature());
-
-            tem.setText(temperature);
-            w.getTemperature();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-    }
-}
 */

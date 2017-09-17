@@ -19,6 +19,14 @@ public class CityPositionList {
             this.lat=lat;
             this.lon=lon;
         }
+
+        public double getLon() {
+            return lon;
+        }
+
+        public double getLat() {
+            return lat;
+        }
     }
 
     public List<Position> getCpList() {

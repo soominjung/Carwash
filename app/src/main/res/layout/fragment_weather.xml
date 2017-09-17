@@ -1,50 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context="soomin.carwash.WeatherFragment">
-
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView6"
-        app:srcCompat="@drawable/w01d" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView4"
-        app:srcCompat="@drawable/w01d" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView5"
-        android:adjustViewBounds="false"
-        app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="15dp"
-        app:srcCompat="@drawable/w01d"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/imageView"
         android:layout_toEndOf="@+id/imageView"
         app:srcCompat="@drawable/w01d" />
 
@@ -52,7 +25,7 @@
         android:id="@+id/imageView3"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/imageView2"
         android:layout_toEndOf="@+id/imageView2"
         app:srcCompat="@drawable/w01d" />
 
@@ -60,47 +33,80 @@
         android:id="@+id/imageView4"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/imageView3"
         android:layout_toEndOf="@+id/imageView3"
+        app:srcCompat="@drawable/w01d" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/imageView4"
+        android:layout_toEndOf="@+id/imageView4"
+        app:srcCompat="@drawable/w01d" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_toEndOf="@+id/imageView5"
+        android:adjustViewBounds="false"
+        app:srcCompat="@drawable/w01d" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/imageView6"
+        android:layout_toEndOf="@+id/imageView6"
         app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:srcCompat="@drawable/w01d"
-        android:layout_below="@+id/imageView"
-        android:layout_alignStart="@+id/imageView" />
+        android:layout_alignStart="@+id/imageView"
+        android:layout_below="@+id/textView9"
+        app:srcCompat="@drawable/w01d" />
 
     <ImageView
-        android:id="@+id/imageView11"
+        android:id="@+id/imageView9"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:srcCompat="@drawable/w01d"
-        android:layout_below="@+id/imageView3"
-        android:layout_toEndOf="@+id/imageView3" />
+        android:layout_alignTop="@+id/imageView8"
+        android:layout_toEndOf="@+id/imageView8"
+        app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/imageView3"
-        android:layout_toEndOf="@+id/imageView2"
+        android:layout_alignTop="@+id/imageView9"
+        android:layout_toEndOf="@+id/imageView9"
+        app:srcCompat="@drawable/w01d" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/imageView10"
+        android:layout_toEndOf="@+id/imageView10"
         app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView12"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:srcCompat="@drawable/w01d"
-        android:layout_below="@+id/imageView5"
-        android:layout_toEndOf="@+id/imageView11" />
+        android:layout_alignTop="@+id/imageView11"
+        android:layout_toEndOf="@+id/imageView11"
+        app:srcCompat="@drawable/w01d" />
 
     <ImageView
         android:id="@+id/imageView13"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/imageView5"
+        android:layout_alignTop="@+id/imageView12"
         android:layout_toEndOf="@+id/imageView12"
         app:srcCompat="@drawable/w01d" />
 
@@ -108,16 +114,167 @@
         android:id="@+id/imageView14"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:srcCompat="@drawable/w01d"
-        android:layout_below="@+id/imageView7"
-        android:layout_toEndOf="@+id/imageView6" />
+        android:layout_alignTop="@+id/imageView13"
+        android:layout_toEndOf="@+id/imageView13"
+        app:srcCompat="@drawable/w01d" />
 
-    <ImageView
-        android:id="@+id/imageView9"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/w01d"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/imageView"
+        android:text="오늘"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView"
+        android:text="1일 후 "
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView2"
+        android:text="2일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView3"
+        android:text="3일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView4"
+        android:text="4일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView5"
+        android:text="5일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView6"
+        android:text="6일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageView8"
+        android:layout_below="@+id/imageView"
+        android:text="7일 후"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView10"
+        android:layout_alignBottom="@+id/textView10"
+        android:layout_toEndOf="@+id/imageView8"
+        android:text="8일 후"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/imageView2"
-        android:layout_toEndOf="@+id/imageView8" />
+        android:layout_toEndOf="@+id/imageView9"
+        android:text="9일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView10"
+        android:layout_alignBottom="@+id/textView10"
+        android:layout_toEndOf="@+id/imageView3"
+        android:text="10일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView11"
+        android:layout_alignBottom="@+id/textView11"
+        android:layout_toEndOf="@+id/imageView11"
+        android:text="11일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView12"
+        android:layout_alignBottom="@+id/textView12"
+        android:layout_toEndOf="@+id/imageView12"
+        android:text="12일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView13"
+        android:layout_alignBottom="@+id/textView13"
+        android:layout_toEndOf="@+id/imageView13"
+        android:text="13일 후"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="10sp" />
 
 </RelativeLayout>

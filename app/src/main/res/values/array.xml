@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="city">
+        <item>현위치</item>
         <item>서울</item>
         <item>부산</item>
         <item>대구</item>

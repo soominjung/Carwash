@@ -55,21 +55,6 @@ public class Repo {
         }
         */
     }
-
-
-    /*
-    Main main;
-    Wind wind;
-
-    public Main getMain() {
-        return main;
-    }
-
-
-    public Wind getWind() {
-        return wind;
-    }
-    */
 }
 
 
