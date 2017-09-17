@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         else
                             text += i+"일 후 "+repo.getList().get(i).getList2().get(0).getId() + "\n";
                     }
-                    tem.setText(text);
+                    //tem.setText(text);
                     CachePot.getInstance().push(repo);
 
                     FragmentManager fm = getFragmentManager();
@@ -232,6 +234,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Spinner s = (Spinner)findViewById(R.id.spinner);
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Toast.makeText(getApplicationContext(), ""+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();//tv.setText("position : " + position + parent.getItemAtPosition(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
 
 /*
         FragmentManager fm = getFragmentManager();

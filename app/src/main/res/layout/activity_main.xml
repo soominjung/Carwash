@@ -124,7 +124,21 @@
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toRightOf="@+id/tvLongtitude" />
 
-
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="106dp"
+        android:layout_height="34dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/tem"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="77dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:entries="@array/city"
+        app:layout_constraintHorizontal_bias="0.925" />
 
 
 </android.support.constraint.ConstraintLayout>
