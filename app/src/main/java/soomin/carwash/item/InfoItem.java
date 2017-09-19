@@ -11,5 +11,5 @@ public class InfoItem {
     @SerializedName("user_distance_meter") public double userDistanceMeter;
     public double lat;
     public double lon;
-    //public double washType;
+    public String washType;
 }

@@ -157,8 +157,18 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        CWInfoItem cwinfoItem = new CWInfoItem(marker.getPosition().latitude,marker.getPosition().longitude,
-                marker.getTitle(),Double.parseDouble(marker.getSnippet()));
+        String[] str = marker.getSnippet().split("\\|");
+
+        CWInfoItem cwinfoItem;
+
+        if(str.length==1) {
+            cwinfoItem = new CWInfoItem(marker.getPosition().latitude, marker.getPosition().longitude,
+                    marker.getTitle(), Double.parseDouble(str[0]), " ");
+        }
+        else {
+            cwinfoItem = new CWInfoItem(marker.getPosition().latitude, marker.getPosition().longitude,
+                    marker.getTitle(), Double.parseDouble(str[0]), str[1]);
+        }
 
         if (!isFinishing() && !isDestroyed())
         {
@@ -274,7 +284,7 @@ public class MapActivity extends AppCompatActivity
         final MarkerOptions marker = new MarkerOptions();
         marker.position(new LatLng(item.lat, item.lon));
         marker.title(item.name);
-        marker.snippet(Double.toString(item.userDistanceMeter));
+        marker.snippet(Double.toString(item.userDistanceMeter)+"|"+item.washType);
         marker.draggable(false);
         marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
 

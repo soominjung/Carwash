@@ -313,12 +313,9 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.getWeatherBtn)
     public void onClick(View v) {
 
-
-
         Intent intent = new Intent(getApplicationContext(),MapActivity.class);
         startActivity(intent);
         finish();
-
     /*
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.remove(wf);
@@ -351,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
     //setConentText->푸쉬내용
         notificationManager.notify(1, builder.build()); // Notification send*/
     }
+
 }
 
 

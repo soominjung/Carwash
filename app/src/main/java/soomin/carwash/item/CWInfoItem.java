@@ -12,14 +12,14 @@ public class CWInfoItem {
     @SerializedName("user_distance_meter") public double userDistanceMeter;
     public double lat;
     public double lon;
-    //public String washType;
+    public String washType;
 
-    public CWInfoItem(double lat, double lon, String name, double userDistanceMeter/*, String washType*/){
+    public CWInfoItem(double lat, double lon, String name, double userDistanceMeter, String washType){
         this.lat = lat;
         this.lon = lon;
         this.name = name;
         this.userDistanceMeter = userDistanceMeter;
-        //this.washType = washType;
+        this.washType = washType;
     }
 
     public double getLat() {
@@ -37,8 +37,8 @@ public class CWInfoItem {
     public String getName() {
         return name;
     }
-/*
+
     public String getWashType() {
         return washType;
-    }*/
+    }
 }

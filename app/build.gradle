@@ -41,5 +41,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:11.0.4'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.android.support:support-v4:25.3.1'
+    compile group: 'com.kakao.sdk', name: 'kakaonavi', version: '1.5.1'
     testCompile 'junit:junit:4.12'
 }
