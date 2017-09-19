@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -35,6 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import soomin.carwash.adapter.SpinnerAdapter;
+import soomin.carwash.item.AlarmHATT;
 import soomin.carwash.item.CityPositionList;
 import soomin.carwash.item.CustomTextView;
 import soomin.carwash.item.Repo;
@@ -47,14 +49,18 @@ public class MainActivity extends AppCompatActivity {
     private String url = "http://api.openweathermap.org/";
     private String key = "7d0203cfc7d7fb58e65e1b312ca410ef";
 
-    Double latitude;
-    Double longitude;
+    Double latitude = 37.566229;
+    Double longitude = 126.977689;
+
+    private static int ONE_MINUTE = 5626;
 
     int pos;
     private CityPositionList cpList = new CityPositionList();
     List<CityPositionList.Position> cityPositionList = cpList.getCpList();
 
     FragmentManager fm = getFragmentManager();
+    WeatherFragment wf;
+    FragmentTransaction fragmentTransaction;
 
     @Bind(R.id.tem)
     CustomTextView tem;
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvDescription;
 
 
-    @OnClick(R.id.getWeatherBtn)
+    //@OnClick(R.id.getWeatherBtn)
     public void setWeather() {
 
         String units = "metric";
@@ -81,9 +87,14 @@ public class MainActivity extends AppCompatActivity {
                     Repo repo = response.body();
                     //String text = "";
 
-                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragmentBorC, new WeatherFragment());
-                    fragmentTransaction.commit();
+                    CachePot.getInstance().push(repo);
+
+                    if (!isFinishing() && !isDestroyed()) {
+                        wf=new WeatherFragment();
+                        fragmentTransaction = fm.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragmentBorC, wf);
+                        fragmentTransaction.commit();
+                    }
 
                     List<rainReport> rRep= new ArrayList<rainReport>();
 
@@ -124,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                         else
                             text += i+"일 후 "+repo.getList().get(i).getList2().get(0).getId() + "\n";
                     }*/
-                    CachePot.getInstance().push(repo);
-
                 }
             }
 
@@ -164,13 +173,13 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (longestNoRain<6){
             if(afterRain==0) {
-                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
                 tem.setText("오늘 세차하면\n좋아요 :)");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
             else {
                 mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
-                tem.setText(afterRain + "일 후에 세차하면\n좋아요 :)");
+                tem.setText(afterRain + "일 후에\n세차하면 좋아요 :)");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
         } else {
@@ -180,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 ivWeather.setImageResource(R.drawable.sun);
             }
             else {
-                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
-                tem.setText(afterRain + "일 후는\n세차하기 좋은날!");
+                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                tem.setText(afterRain + "일 후는\n세차하기 좋은 날!");
                 ivWeather.setImageResource(R.drawable.sun);
             }
         }
@@ -263,12 +272,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentBorC, new WeatherFragment());
-        fragmentTransaction.commit();
+        new AlarmHATT(getApplicationContext()).Alarm();
+
+        if (!isFinishing() && !isDestroyed()) {
+            wf=new WeatherFragment();
+            fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.add(R.id.fragmentBorC, wf);
+            fragmentTransaction.commit();
+        }
 
         startLocationService();
         setWeather();
@@ -284,9 +297,9 @@ public class MainActivity extends AppCompatActivity {
                 pos = position;
                 //Toast.makeText(getApplicationContext(), ""+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
 
-                if(pos==0)
-                    startLocationService();
-                else{
+                //if(pos==0)
+                 //   startLocationService();
+                if(pos!=0){
                     latitude=cityPositionList.get(pos).getLat();
                     longitude=cityPositionList.get(pos).getLon();
                 }
@@ -295,6 +308,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    @OnClick(R.id.getWeatherBtn)
+    public void onClick(View v) {
+
+
+
+        Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+        startActivity(intent);
+        finish();
+
+    /*
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.remove(wf);
+        fragmentTransaction.commit();
+    */
+
+
+        /*
+        NotificationManager notificationManager= (NotificationManager)MainActivity.this.getSystemService(MainActivity.this.NOTIFICATION_SERVICE);
+        Intent intent1 = new Intent(MainActivity.this.getApplicationContext(),MainActivity.class); //인텐트 생성.
+
+
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_CLEAR_TOP);//현재 액티비티를 최상으로 올리고, 최상의 액티비티를 제외한 모든 액티비티를 없앤다.
+
+        PendingIntent pendingNotificationIntent = PendingIntent.getActivity( MainActivity.this,0, intent1, FLAG_UPDATE_CURRENT);
+        /*PendingIntent는 일회용 인텐트 같은 개념입니다.
+        FLAG_UPDATE_CURRENT - > 만일 이미 생성된 PendingIntent가 존재 한다면, 해당 Intent의 내용을 변경함.
+        FLAG_CANCEL_CURRENT - .이전에 생성한 PendingIntent를 취소하고 새롭게 하나 만든다.
+        FLAG_NO_CREATE -> 현재 생성된 PendingIntent를 반환합니다.
+        FLAG_ONE_SHOT - >이 플래그를 사용해 생성된 PendingIntent는 단 한번밖에 사용할 수 없습니다
+
+        builder.setSmallIcon(R.drawable.refresh).setTicker("HETT").setWhen(System.currentTimeMillis()).setNumber(1).setContentTitle("푸쉬 제목").setContentText("푸쉬내용")
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingNotificationIntent).setAutoCancel(true).setOngoing(true);
+        //해당 부분은 API 4.1버전부터 작동합니다.
+    //setSmallIcon - > 작은 아이콘 이미지
+    //setTicker - > 알람이 출력될 때 상단에 나오는 문구.
+    //setWhen -> 알림 출력 시간.
+    //setContentTitle-> 알림 제목
+    //setConentText->푸쉬내용
+        notificationManager.notify(1, builder.build()); // Notification send*/
     }
 }
 

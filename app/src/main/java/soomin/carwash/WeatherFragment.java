@@ -29,6 +29,8 @@ public class WeatherFragment extends Fragment {
 
         repo = CachePot.getInstance().pop(Repo.class);
 
+
+
         if(repo!=null) {
             List<Integer> ivIDList=ivList.getIvList();
             for (int i = 0; i < repo.getList().size(); i++) {
@@ -67,7 +69,8 @@ public class WeatherFragment extends Fragment {
                         break;
                 }
             }
-        }
+        }//else
+            //Toast.makeText(getActivity(),"repo is null",Toast.LENGTH_LONG).show();
 
         return v;
     }

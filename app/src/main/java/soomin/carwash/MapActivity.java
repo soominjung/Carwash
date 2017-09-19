@@ -1,7 +1,10 @@
 package soomin.carwash;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.github.kimkevin.cachepot.CachePot;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import soomin.carwash.adapter.MapListAdapter;
+import soomin.carwash.item.CWInfoItem;
 import soomin.carwash.item.GeoItem;
 import soomin.carwash.item.InfoItem;
 import soomin.carwash.lib.GeoLib;
@@ -38,7 +44,7 @@ import soomin.carwash.remote.ServiceGenerator;
  */
 public class MapActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
-                     /*GoogleMap.OnMapClickListener,*/ GoogleMap.OnCameraMoveListener {
+                     GoogleMap.OnMapClickListener, GoogleMap.OnCameraMoveListener {
     private final String TAG = this.getClass().getSimpleName();
 
     Context context;
@@ -50,8 +56,14 @@ public class MapActivity extends AppCompatActivity
     int distanceMeter = 640;
     int currentZoomLevel = 10;
     boolean isOnList = false;
+    boolean isMarkerClicked = false;
+    boolean firstMarkerClick = false;
 
     Toast zoomGuideToast;
+
+    FragmentManager fm = getFragmentManager();
+    FragmentTransaction fragmentTransaction;
+    CWInfoFragment cwinfo;
 
     private HashMap<Marker, InfoItem> markerMap = new HashMap<>();
 
@@ -113,6 +125,7 @@ public class MapActivity extends AppCompatActivity
         map.setInfoWindowAdapter(null);
 
         map.setOnMarkerClickListener(this);
+        map.setOnMapClickListener(this);
 
         String fineLocationPermission = android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -128,11 +141,11 @@ public class MapActivity extends AppCompatActivity
         setting.setCompassEnabled(true);
         setting.setZoomControlsEnabled(true);
         setting.setMapToolbarEnabled(false);
-
-        Toast.makeText(MapActivity.this,GeoItem.getKnownLocation().toString(),Toast.LENGTH_LONG).show();
+        map.setMinZoomPreference(11);
+        //Toast.makeText(MapActivity.this,GeoItem.getKnownLocation().toString(),Toast.LENGTH_LONG).show();
 
         if (GeoItem.getKnownLocation() != null) {
-            movePosition(GeoItem.getKnownLocation(), 10);
+            movePosition(GeoItem.getKnownLocation(), 14);
         }
         showList();
     }
@@ -140,12 +153,37 @@ public class MapActivity extends AppCompatActivity
      * 구글맵에서 마커가 클릭되었을 때 호출된다.
      * @param marker 클릭한 마커에 대한 정보를 가진 객체
      * @return 마커 이벤트를 처리했다면 true, 그렇지 않다면 false
-     */
+*/
     @Override
     public boolean onMarkerClick(Marker marker) {
-        InfoItem item = markerMap.get(marker);
-        //GoLib.getInstance().goBestFoodInfoActivity(context, item.seq);
+
+        CWInfoItem cwinfoItem = new CWInfoItem(marker.getPosition().latitude,marker.getPosition().longitude,
+                marker.getTitle(),Double.parseDouble(marker.getSnippet()));
+
+        if (!isFinishing() && !isDestroyed())
+        {
+            CachePot.getInstance().push(cwinfoItem);
+            cwinfo = new CWInfoFragment();
+            fragmentTransaction = fm.beginTransaction();
+            if (firstMarkerClick) {
+                fragmentTransaction.add(R.id.fm2, cwinfo).commit();
+                firstMarkerClick=false;
+            }else{
+                fragmentTransaction.replace(R.id.fm2, cwinfo).commit();
+            }
+            isMarkerClicked = true;
+        }
         return true;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        //setInfoList(false);
+        if(isMarkerClicked){
+            fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.remove(cwinfo).commit();
+            isMarkerClicked=false;
+        }
     }
 
     /**
@@ -168,7 +206,7 @@ public class MapActivity extends AppCompatActivity
         RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
 
         Call<ArrayList<InfoItem>> call = remoteService.listMap(latLng.latitude,
-                latLng.longitude, distance, userLatLng.latitude, userLatLng.longitude);
+                latLng.longitude, distance, userLatLng.latitude, userLatLng.longitude);//Toast.makeText(MapActivity.this,"userLat:"+userLatLng.latitude+" userLon:"+userLatLng.longitude,Toast.LENGTH_LONG).show();
         call.enqueue(new Callback<ArrayList<InfoItem>>() {
             @Override
             public void onResponse(Call<ArrayList<InfoItem>> call,
@@ -176,16 +214,16 @@ public class MapActivity extends AppCompatActivity
                 ArrayList<InfoItem> list = response.body();
 
                 if (list == null) {
-                    Toast.makeText(MapActivity.this,"list is null",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MapActivity.this,"list is null",Toast.LENGTH_LONG).show();
                     list = new ArrayList<>();
                 }
 
                 if (response.isSuccessful()) {
-                    Toast.makeText(MapActivity.this,"before setMap",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MapActivity.this,"before setMap",Toast.LENGTH_LONG).show();
                     setMap(list);
                     infoList = list;
                 } else {
-                    Toast.makeText(MapActivity.this,"not success",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MapActivity.this,"not success",Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -204,8 +242,8 @@ public class MapActivity extends AppCompatActivity
             map.clear();
             addMarker(list);
         }
-        adapter.setItemList(list);
-        drawCircle(currentLatLng);
+        //adapter.setItemList(list);
+        //drawCircle(currentLatLng);
     }
 
     /**
@@ -213,12 +251,12 @@ public class MapActivity extends AppCompatActivity
      * @param list 맛집 리스트
      */
     private void addMarker(ArrayList<InfoItem> list) {
-        Toast.makeText(MapActivity.this,"addMarker list.size()"+list.size(),Toast.LENGTH_LONG).show();
+        //Toast.makeText(MapActivity.this,"addMarker list.size()"+list.size(),Toast.LENGTH_LONG).show();
 
         if (list == null || list.size() == 0) return;
 
         for (InfoItem item : list) {
-            Toast.makeText(MapActivity.this,"addMarker"+item,Toast.LENGTH_LONG).show();
+            //Toast.makeText(MapActivity.this,"addMarker"+item,Toast.LENGTH_LONG).show();
             if (item.lat != 0 && item.lon != 0) {
                 Marker marker = map.addMarker(getMarker(item));
 
@@ -236,19 +274,21 @@ public class MapActivity extends AppCompatActivity
         final MarkerOptions marker = new MarkerOptions();
         marker.position(new LatLng(item.lat, item.lon));
         marker.title(item.name);
-        //marker.snippet(item.tel);
+        marker.snippet(Double.toString(item.userDistanceMeter));
         marker.draggable(false);
+        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
 
         return marker;
     }
+
     private void drawCircle(LatLng position) {
         double radiusInMeters = distanceMeter;
-        int strokeColor = 0x440000ff;
+        int strokeColor = 000000;
         int shadeColor = 0x110000ff;
 
         CircleOptions circleOptions
                 = new CircleOptions().center(position).radius(radiusInMeters)
-                .fillColor(shadeColor).strokeColor(strokeColor).strokeWidth(4);
+                .fillColor(Color.argb(50,0,0,0)).strokeColor(strokeColor).strokeWidth(4);
         map.addCircle(circleOptions);
     }
     /**
@@ -256,6 +296,7 @@ public class MapActivity extends AppCompatActivity
      */
     @Override
     public void onCameraMove() {
+        GeoLib.getInstance().setLastKnownLocation(MapActivity.this);
         showList();
     }
 
@@ -266,7 +307,7 @@ public class MapActivity extends AppCompatActivity
         currentZoomLevel = (int) map.getCameraPosition().zoom;
         currentLatLng = map.getCameraPosition().target;
 
-        if (currentZoomLevel < 10) {
+        if (currentZoomLevel < 12) {
 
             map.clear();
 
@@ -282,7 +323,6 @@ public class MapActivity extends AppCompatActivity
         }
 
         distanceMeter = GeoLib.getInstance().getDistanceMeterFromScreenCenter(map);
-
         listMap(currentLatLng, distanceMeter, GeoItem.getKnownLocation());
     }
 }
