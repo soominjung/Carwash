@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -11,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar" />
 
     <FrameLayout
         android:id="@+id/fm2"
@@ -21,25 +23,15 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="20dp" />
 
-    <!-- list 버튼 없앰
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:padding="@dimen/spacing_small"
-            android:layout_above="@+id/list_open"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone"/>
-        <Button
-            android:id="@+id/list_open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_large"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimaryDark"
-            android:text="@string/temp"
-            android:textColor="@color/text_color_black"
-            android:textSize="@dimen/text_size_small2" />
-    -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@android:style/Theme.Holo.Light"
+        app:popupTheme="@android:style/Theme.Holo.Light"/>
+
 </RelativeLayout>

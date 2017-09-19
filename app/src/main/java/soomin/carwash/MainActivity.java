@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -36,7 +39,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import soomin.carwash.adapter.SpinnerAdapter;
-import soomin.carwash.item.AlarmHATT;
 import soomin.carwash.item.CityPositionList;
 import soomin.carwash.item.CustomTextView;
 import soomin.carwash.item.Repo;
@@ -70,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout mLayout;
     @Bind(R.id.tvDescription)
     TextView tvDescription;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
 
-    //@OnClick(R.id.getWeatherBtn)
+    @OnClick(R.id.getWeatherBtn)
     public void setWeather() {
 
         String units = "metric";
@@ -158,38 +162,45 @@ public class MainActivity extends AppCompatActivity {
         //Toast.makeText(MainActivity.this, afterRain+"일 후부터 "+longestNoRain+"일 간 비소식 없음",Toast.LENGTH_LONG).show();
         if (longestNoRain < 3) {
             mLayout.setBackgroundColor(Color.rgb(101,114,122));
+            toolbar.setBackgroundColor(Color.rgb(81,94,92));
             tem.setText("당분간\n세차하면 안돼요 :(");
             ivWeather.setImageResource(R.drawable.rain);
         } else if (longestNoRain<4) {
             if(afterRain==0) {
                 mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                toolbar.setBackgroundColor(Color.rgb(16,163,178));
                 tem.setText("오늘 세차해도\n괜찮아요.");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
             else {
                 mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                toolbar.setBackgroundColor(Color.rgb(0,103,152));
                 tem.setText(afterRain + "일 후에 세차해도\n나쁘지 않아요.");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
         } else if (longestNoRain<6){
             if(afterRain==0) {
                 mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                toolbar.setBackgroundColor(Color.rgb(0,103,152));
                 tem.setText("오늘 세차하면\n좋아요 :)");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
             else {
                 mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
+                toolbar.setBackgroundColor(Color.rgb(0,103,152));
                 tem.setText(afterRain + "일 후에\n세차하면 좋아요 :)");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
         } else {
             if(afterRain==0) {
                 mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                toolbar.setBackgroundColor(Color.rgb(16,163,178));
                 tem.setText("오늘 꼭!\n세차하세요:D");
                 ivWeather.setImageResource(R.drawable.sun);
             }
             else {
                 mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
+                toolbar.setBackgroundColor(Color.rgb(16,163,178));
                 tem.setText(afterRain + "일 후는\n세차하기 좋은 날!");
                 ivWeather.setImageResource(R.drawable.sun);
             }
@@ -274,7 +285,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        new AlarmHATT(getApplicationContext()).Alarm();
+        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+        setSupportActionBar(toolbar); //툴바를 액션바와 같게 만들어 준다.
 
         if (!isFinishing() && !isDestroyed()) {
             wf=new WeatherFragment();
@@ -310,45 +322,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.getWeatherBtn)
-    public void onClick(View v) {
 
-        Intent intent = new Intent(getApplicationContext(),MapActivity.class);
-        startActivity(intent);
-        finish();
-    /*
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.remove(wf);
-        fragmentTransaction.commit();
-    */
-
-
-        /*
-        NotificationManager notificationManager= (NotificationManager)MainActivity.this.getSystemService(MainActivity.this.NOTIFICATION_SERVICE);
-        Intent intent1 = new Intent(MainActivity.this.getApplicationContext(),MainActivity.class); //인텐트 생성.
-
-
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_CLEAR_TOP);//현재 액티비티를 최상으로 올리고, 최상의 액티비티를 제외한 모든 액티비티를 없앤다.
-
-        PendingIntent pendingNotificationIntent = PendingIntent.getActivity( MainActivity.this,0, intent1, FLAG_UPDATE_CURRENT);
-        /*PendingIntent는 일회용 인텐트 같은 개념입니다.
-        FLAG_UPDATE_CURRENT - > 만일 이미 생성된 PendingIntent가 존재 한다면, 해당 Intent의 내용을 변경함.
-        FLAG_CANCEL_CURRENT - .이전에 생성한 PendingIntent를 취소하고 새롭게 하나 만든다.
-        FLAG_NO_CREATE -> 현재 생성된 PendingIntent를 반환합니다.
-        FLAG_ONE_SHOT - >이 플래그를 사용해 생성된 PendingIntent는 단 한번밖에 사용할 수 없습니다
-
-        builder.setSmallIcon(R.drawable.refresh).setTicker("HETT").setWhen(System.currentTimeMillis()).setNumber(1).setContentTitle("푸쉬 제목").setContentText("푸쉬내용")
-                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingNotificationIntent).setAutoCancel(true).setOngoing(true);
-        //해당 부분은 API 4.1버전부터 작동합니다.
-    //setSmallIcon - > 작은 아이콘 이미지
-    //setTicker - > 알람이 출력될 때 상단에 나오는 문구.
-    //setWhen -> 알림 출력 시간.
-    //setContentTitle-> 알림 제목
-    //setConentText->푸쉬내용
-        notificationManager.notify(1, builder.build()); // Notification send*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        //각각의 버튼을 클릭할때의 수행할것을 정의해 준다.
+        switch (item.getItemId()){
+            case R.id.action_bt1:
+                Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+
+        return true;
+    }
 }
 
 

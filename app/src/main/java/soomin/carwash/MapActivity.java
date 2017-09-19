@@ -3,12 +3,15 @@ package soomin.carwash;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -46,6 +49,7 @@ public class MapActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
                      GoogleMap.OnMapClickListener, GoogleMap.OnCameraMoveListener {
     private final String TAG = this.getClass().getSimpleName();
+
 
     Context context;
 
@@ -108,10 +112,30 @@ public class MapActivity extends AppCompatActivity
 
         //((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.menu2);
         setContentView(R.layout.activity_map);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+        toolbar.setBackgroundColor(Color.rgb(16,163,178));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         SupportMapFragment smf = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         smf.getMapAsync(this);
 
+
         adapter = new MapListAdapter(context, R.layout.row_map, infoList);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
