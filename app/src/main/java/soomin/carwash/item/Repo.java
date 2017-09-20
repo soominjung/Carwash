@@ -8,18 +8,6 @@ import java.util.List;
  */
 
 public class Repo {
-    /*City city;
-    public class City{
-        String country;
-
-        public String getCountry() {
-            return country;
-        }
-    }
-
-    public City getCity() {
-        return city;
-    }*/
 
     List<Item> list;
 
@@ -30,7 +18,7 @@ public class Repo {
     public class Item {
 
         List<Item2> weather;
-        public List<Item2> getList2() {return weather;}
+        public List<Item2> getList2() { return weather; }
 
         public class Item2{
             int id;
@@ -39,21 +27,6 @@ public class Repo {
                 return id;
             }
         }
-        /*
-        temp temp;
-
-        public class temp {
-            double day;
-
-            public double getDay() {
-                return day;
-            }
-        }
-
-        public temp getTemp() {
-            return temp;
-        }
-        */
     }
 }
 

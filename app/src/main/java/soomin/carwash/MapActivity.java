@@ -9,10 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.kimkevin.cachepot.CachePot;
@@ -34,7 +32,6 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import soomin.carwash.adapter.MapListAdapter;
 import soomin.carwash.item.CWInfoItem;
 import soomin.carwash.item.GeoItem;
 import soomin.carwash.item.InfoItem;
@@ -71,11 +68,8 @@ public class MapActivity extends AppCompatActivity
 
     private HashMap<Marker, InfoItem> markerMap = new HashMap<>();
 
-    RecyclerView list;
-    MapListAdapter adapter;
     ArrayList<InfoItem> infoList = new ArrayList<>();
 
-    Button listOpen;
 
     /**
      * MapFragment 인스턴스를 생성해서 반환한다.
@@ -122,8 +116,6 @@ public class MapActivity extends AppCompatActivity
         SupportMapFragment smf = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         smf.getMapAsync(this);
 
-
-        adapter = new MapListAdapter(context, R.layout.row_map, infoList);
     }
 
     @Override

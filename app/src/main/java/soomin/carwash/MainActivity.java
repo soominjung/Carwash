@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
     Double latitude = 37.566229;
     Double longitude = 126.977689;
 
-    private static int ONE_MINUTE = 5626;
-
     int pos;
     private CityPositionList cpList = new CityPositionList();
     List<CityPositionList.Position> cityPositionList = cpList.getCpList();
