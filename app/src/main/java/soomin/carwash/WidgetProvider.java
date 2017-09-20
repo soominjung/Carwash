@@ -236,10 +236,10 @@ public class WidgetProvider extends AppWidgetProvider {
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,101,114,122));
             } else if (noRain > 2 && noRain < 5) {
                 views.setTextViewText(R.id.txtInfo, "오늘 세차해도\n괜찮아요.");
-                views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,9, 123, 172));
+                views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,10, 119, 166));
             } else if (noRain > 4 && noRain < 6) {
                 views.setTextViewText(R.id.txtInfo, "오늘 세차하면\n좋아요 :)");
-                views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,9, 123, 172));
+                views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200, 0, 169, 217));
             }else {
                 views.setTextViewText(R.id.txtInfo, "오늘 꼭\n세차하세요 :D");
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,36, 183, 198));

@@ -165,36 +165,36 @@ public class MainActivity extends AppCompatActivity {
             ivWeather.setImageResource(R.drawable.rain);
         } else if (longestNoRain<4) {
             if(afterRain==0) {
-                mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
-                toolbar.setBackgroundColor(Color.rgb(16,163,178));
+                mLayout.setBackgroundColor(Color.rgb(10, 119, 166));
+                toolbar.setBackgroundColor(Color.rgb(0,99,149));
                 tem.setText("오늘 세차해도\n괜찮아요.");
-                ivWeather.setImageResource(R.drawable.cloud);
+                ivWeather.setImageResource(R.drawable.cloudcc);
             }
             else {
-                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
-                toolbar.setBackgroundColor(Color.rgb(0,103,152));
+                mLayout.setBackgroundColor(Color.rgb(10, 119, 166));
+                toolbar.setBackgroundColor(Color.rgb(0,99,146));
                 tem.setText(afterRain + "일 후에 세차해도\n나쁘지 않아요.");
                 ivWeather.setImageResource(R.drawable.cloud);
             }
         } else if (longestNoRain<6){
             if(afterRain==0) {
-                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
-                toolbar.setBackgroundColor(Color.rgb(0,103,152));
+                mLayout.setBackgroundColor(Color.rgb(0, 169, 217));
+                toolbar.setBackgroundColor(Color.rgb(0,149,197));
                 tem.setText("오늘 세차하면\n좋아요 :)");
-                ivWeather.setImageResource(R.drawable.cloud);
+                ivWeather.setImageResource(R.drawable.cloudnsuncc);
             }
             else {
-                mLayout.setBackgroundColor(Color.rgb(9, 123, 172));
-                toolbar.setBackgroundColor(Color.rgb(0,103,152));
+                mLayout.setBackgroundColor(Color.rgb(0, 169, 217));
+                toolbar.setBackgroundColor(Color.rgb(0,149,197));
                 tem.setText(afterRain + "일 후에\n세차하면 좋아요 :)");
-                ivWeather.setImageResource(R.drawable.cloud);
+                ivWeather.setImageResource(R.drawable.cloudnsun);
             }
         } else {
             if(afterRain==0) {
                 mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
                 toolbar.setBackgroundColor(Color.rgb(16,163,178));
                 tem.setText("오늘 꼭!\n세차하세요:D");
-                ivWeather.setImageResource(R.drawable.sun);
+                ivWeather.setImageResource(R.drawable.suncc);
             }
             else {
                 mLayout.setBackgroundColor(Color.rgb(36, 183, 198));
