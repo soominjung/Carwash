@@ -1,7 +1,9 @@
 package soomin.carwash;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +60,28 @@ public class CWInfoFragment extends Fragment {
         navibtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NaviFunc(cwInfoItem.getLat(),cwInfoItem.getLon(),cwInfoItem.getName());
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+                alert.setMessage("카카오내비를 이용해 길안내를 받겠습니까?");
+
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        NaviFunc(cwInfoItem.getLat(),cwInfoItem.getLon(),cwInfoItem.getName());
+                    }
+
+                });
+
+                alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+
+                });
+
+                alert.show();
+
+                //NaviFunc(cwInfoItem.getLat(),cwInfoItem.getLon(),cwInfoItem.getName());
             }
         });
 

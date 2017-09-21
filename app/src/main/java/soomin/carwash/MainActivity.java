@@ -21,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.kimkevin.cachepot.CachePot;
 
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Repo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 tvDescription.setText(afterRain+"일 후부터 "+longestNoRain+"일 간 비/눈소식 없음");
         }
         else
-            tvDescription.setText("2주간 잦은 비소식");
+            tvDescription.setText("2주간 잦은 비/눈소식");
         //Toast.makeText(MainActivity.this, afterRain+"일 후부터 "+longestNoRain+"일 간 비소식 없음",Toast.LENGTH_LONG).show();
         if (longestNoRain < 3) {
             mLayout.setBackgroundColor(Color.rgb(101,114,122));

@@ -109,6 +109,7 @@ public class MapActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+        toolbar.setTitle("내 주변 세차장 찾기");
         toolbar.setBackgroundColor(Color.rgb(16,163,178));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

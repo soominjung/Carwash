@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/ivNavi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/cwName"
         android:layout_marginEnd="15dp"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/ivNavi"
         android:layout_below="@+id/ivNavi"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="20dp"
         android:text="TextView"
         android:textAlignment="textEnd"
         android:textSize="12sp" />

@@ -18,14 +18,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.888"
         app:srcCompat="@drawable/sun"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         app:layout_constraintBottom_toBottomOf="@+id/tem"
-        android:layout_marginBottom="96dp"
+        android:layout_marginBottom="110dp"
         app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
@@ -44,19 +44,16 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintHorizontal_bias="0.0"
-        tools:layout_constraintTop_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/tem"
-        app:layout_constraintTop_toBottomOf="@+id/tem"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintBottom_toBottomOf="@+id/tem" />
 
     <soomin.carwash.item.CustomTextView
         android:id="@+id/tem"
-        android:layout_width="317dp"
-        android:layout_height="117dp"
+        android:layout_width="321dp"
+        android:layout_height="124dp"
         android:layout_alignParentStart="true"
-        android:layout_marginEnd="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="214dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="222dp"
         android:text="오늘&#10;세차하세요 :D"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -68,7 +65,7 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
-        app:layout_constraintHorizontal_bias="0.666" />
+        tools:layout_editor_absoluteX="-3dp" />
 <!--
     <Button
         android:id="@+id/getWeatherBtn"
@@ -143,6 +140,7 @@
         app:popupTheme="@android:style/Theme.Holo.Light"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        app:titleTextAppearance="@style/ActionBarTitleStyle"/>
 
 </android.support.constraint.ConstraintLayout>

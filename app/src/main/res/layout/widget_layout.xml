@@ -17,10 +17,10 @@
         android:weightSum="1">
 
         <ImageView
-            android:id="@+id/imageView17"
+            android:id="@+id/ivIcon"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/cloud" />
+            android:src="@drawable/icon2" />
 
         <TextView
             android:id="@+id/txtInfo"
