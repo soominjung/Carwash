@@ -107,7 +107,7 @@ public class WidgetProvider extends AppWidgetProvider {
             public void onLocationChanged(Location location) {
                 Log.d(TAG, "onLocationChanged() called.");
 
-                setWheatherText(location.getLatitude(), location.getLongitude());
+                setWeatherText(location.getLatitude(), location.getLongitude());
 
                 stopSelf();
             }
@@ -175,12 +175,11 @@ public class WidgetProvider extends AppWidgetProvider {
             }
         }
 
-        public void setWheatherText(double latitude, double longitude) {
+        public void setWeatherText(double latitude, double longitude) {
             String units = "metric";
 
             String url = "http://api.openweathermap.org/";
             String key = "7d0203cfc7d7fb58e65e1b312ca410ef";
-            String info = "";
 
             Retrofit client = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).client(createOkHttpClient()).build();
             Weather_Interface interFace = client.create(Weather_Interface.class);
@@ -190,7 +189,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 public void onResponse(Call<Repo> call, Response<Repo> response) {
                     if(response.isSuccessful()){
                         Repo repo = response.body();
-                        //String text = "";
 
                         int noRainCnt=0;
 
@@ -212,16 +210,6 @@ public class WidgetProvider extends AppWidgetProvider {
                     Log.d(TAG, "fail");
                 }
             });
-/*
-            RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_layout);
-
-            views.setTextViewText(R.id.txtInfo,info);
-            //views.setInt(R.id.wlayout, "setBackgroundColor", Color.rgb(9, 123, 172));
-
-
-            ComponentName thisWidget = new ComponentName(this, WidgetProvider.class);
-            AppWidgetManager manager = AppWidgetManager.getInstance(this);
-            manager.updateAppWidget(thisWidget, views);*/
 
             xcoord = longitude;
             ycoord = latitude;
@@ -233,19 +221,15 @@ public class WidgetProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_layout);
             if (noRain < 3) {
                 views.setTextViewText(R.id.txtInfo, "오늘 세차하면\n안돼요.");
-                //views.setImageViewResource(R.id.ivIcon,R.drawable.rain);
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,101,114,122));
             } else if (noRain > 2 && noRain < 5) {
                 views.setTextViewText(R.id.txtInfo, "오늘 세차해도\n괜찮아요.");
-                //views.setImageViewResource(R.id.ivIcon,R.drawable.cloudcc);
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,10, 119, 166));
             } else if (noRain > 4 && noRain < 6) {
                 views.setTextViewText(R.id.txtInfo, "오늘 세차하면\n좋아요 :)");
-                //views.setImageViewResource(R.id.ivIcon,R.drawable.cloudnsuncc);
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200, 0, 169, 217));
             }else {
                 views.setTextViewText(R.id.txtInfo, "오늘 꼭\n세차하세요 :D");
-                //views.setImageViewResource(R.id.ivIcon,R.drawable.suncc);
                 views.setInt(R.id.wlayout, "setBackgroundColor", Color.argb(200,36, 183, 198));
             }
 
@@ -254,7 +238,6 @@ public class WidgetProvider extends AppWidgetProvider {
             manager.updateAppWidget(thisWidget, views);
         }
     }
-
 
 
     private static OkHttpClient createOkHttpClient() {

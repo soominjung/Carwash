@@ -66,24 +66,7 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:layout_editor_absoluteX="-3dp" />
-<!--
-    <Button
-        android:id="@+id/getWeatherBtn"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_alignBottom="@+id/tem"
-        android:layout_alignParentEnd="true"
-        android:onClick="getWeather"
-        android:text="refresh"
-        android:textSize="12sp"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="140dp"
-        app:layout_constraintLeft_toRightOf="@+id/spinner"
-        android:layout_marginLeft="1dp" />
--->
+
     <FrameLayout
         android:id="@+id/fragmentBorC"
         android:layout_width="wrap_content"

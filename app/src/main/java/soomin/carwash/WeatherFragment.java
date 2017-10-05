@@ -85,8 +85,7 @@ public class WeatherFragment extends Fragment {
                         break;
                 }
             }
-        }//else
-            //Toast.makeText(getActivity(),"repo is null",Toast.LENGTH_LONG).show();
+        }
 
         return v;
     }

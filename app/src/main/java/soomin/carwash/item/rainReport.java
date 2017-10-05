@@ -13,11 +13,6 @@ public class rainReport {
         this.noRain=noRain;
     }
 
-
-
-    public void setAfterRain(int afterRain) {
-        this.afterRain = afterRain;
-    }
     public void setNoRain(int noRain) {
         this.noRain = noRain;
     }

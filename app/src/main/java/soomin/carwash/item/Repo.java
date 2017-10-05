@@ -1,7 +1,6 @@
 package soomin.carwash.item;
 
 import java.util.List;
-//import soomin.carwash.item.Item;
 
 /**
  * Created by Soomin Jung on 2017-08-25.

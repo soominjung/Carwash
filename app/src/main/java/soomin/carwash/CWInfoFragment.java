@@ -80,8 +80,6 @@ public class CWInfoFragment extends Fragment {
                 });
 
                 alert.show();
-
-                //NaviFunc(cwInfoItem.getLat(),cwInfoItem.getLon(),cwInfoItem.getName());
             }
         });
 

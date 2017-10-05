@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.kimkevin.cachepot.CachePot;
 
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Repo> call, Response<Repo> response) {
                 if(response.isSuccessful()){
                     Repo repo = response.body();
-                    //String text = "";
 
                     CachePot.getInstance().push(repo);
 
@@ -94,12 +94,11 @@ public class MainActivity extends AppCompatActivity {
                         wf=new WeatherFragment();
                         fragmentTransaction = fm.beginTransaction();
                         fragmentTransaction.replace(R.id.fragmentBorC, wf);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commitAllowingStateLoss();
                     }
 
                     List<rainReport> rRep= new ArrayList<rainReport>();
 
-                    int afterRain=0;
                     int noRainCnt=0;
                     int rrCnt=0;
                     int max=0;
@@ -128,20 +127,14 @@ public class MainActivity extends AppCompatActivity {
                             maxInx = i;
                         }
                     }
-                    //Toast.makeText(MainActivity.this, "after ndays:"+afterRain+"no rain for:"+longestNoRain,Toast.LENGTH_LONG).show();
                     showMessage(rRep.get(maxInx).getNoRain(),rRep.get(maxInx).getAfterRain());
-                    /*for(int i=0;i<repo.getList().size();i++) {
-                        if(i==0)
-                            text+="오늘     "+repo.getList().get(i).getList2().get(0).getId()+ "\n";
-                        else
-                            text += i+"일 후 "+repo.getList().get(i).getList2().get(0).getId() + "\n";
-                    }*/
                 }
             }
 
             @Override
             public void onFailure(Call<Repo> call, Throwable t) {
-                //Toast.makeText(MainActivity.this, "fail",Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"인터넷 연결 상태를 확인해주세요.",Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -156,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             tvDescription.setText("2주간 잦은 비/눈소식");
-        //Toast.makeText(MainActivity.this, afterRain+"일 후부터 "+longestNoRain+"일 간 비소식 없음",Toast.LENGTH_LONG).show();
         if (longestNoRain < 3) {
             mLayout.setBackgroundColor(Color.rgb(101,114,122));
             toolbar.setBackgroundColor(Color.rgb(81,94,92));
@@ -226,34 +218,24 @@ public class MainActivity extends AppCompatActivity {
                     minTime,
                     minDistance,
                     gpsListener);
-            // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
+            // 위치 확인이 안되는 경우 최근 확인된 위치 정보 먼저 확인
              Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastLocation != null) {
                 latitude = lastLocation.getLatitude();
                 longitude = lastLocation.getLongitude();
-
-                //Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : " + latitude + "\nLongitude:" + longitude, Toast.LENGTH_LONG).show();
             }
         } catch(SecurityException ex) {
             ex.printStackTrace();
         }
     }
 
-    /**
-     * 리스너 클래스 정의
-     */
+    //리스너 클래스 정의
     public class GPSListener implements LocationListener {
-        /**
-         * 위치 정보가 확인될 때 자동 호출되는 메소드
-         */
         public void onLocationChanged(Location location) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
             if(pos==0)
                 setWeather();
-            //String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
-
-            //Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
         public void onProviderDisabled(String provider) {
@@ -267,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //로그 확인을 위해
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -283,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
-        setSupportActionBar(toolbar); //툴바를 액션바와 같게 만들어 준다.
+        setSupportActionBar(toolbar); //툴바를 액션바와 같게
 
         if (!isFinishing() && !isDestroyed()) {
             wf=new WeatherFragment();
@@ -304,10 +285,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 pos = position;
-                //Toast.makeText(getApplicationContext(), ""+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
-
-                //if(pos==0)
-                 //   startLocationService();
                 if(pos!=0){
                     latitude=cityPositionList.get(pos).getLat();
                     longitude=cityPositionList.get(pos).getLon();
@@ -328,51 +305,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        //각각의 버튼을 클릭할때의 수행할것을 정의해 준다.
+        //각각의 버튼을 클릭할 때 수행할것을 정의
         switch (item.getItemId()){
             case R.id.action_bt1:
                 Intent intent = new Intent(getApplicationContext(),MapActivity.class);
                 startActivity(intent);
-                finish();
                 break;
         }
 
         return true;
     }
 }
-
-
-/**
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-    }
-/* 옵션메뉴 만드는 건데 당장 필요 없음
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-        if (id == R.id.action_settings) {
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-*/
